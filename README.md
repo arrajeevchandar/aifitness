@@ -27,8 +27,3 @@ A project to generate your weekly workout plan with either OpenAI GPT model or G
 - OpenAI GPT Model
 - Google PaLM Model
 
-## Contact
-
-mohdejazsiddiqui@gmail.com
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y618ZETK)
