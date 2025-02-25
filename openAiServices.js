@@ -6,7 +6,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const OPEN_AI_CHAT_COMPLETION_MODEL = "gpt-3.5-turbo"
+const OPEN_AI_CHAT_COMPLETION_MODEL = "gpt-4o-mini"
 
 export const getCompletion = async (prompt) => {
 	const completion = await openai.createChatCompletion({

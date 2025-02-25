@@ -1,11 +1,8 @@
 export const AI_SOURCES = [
+	
 	{
-		value: 'openai',
-		title: 'OpenAI GPT'
-	},
-	{
-		value: 'palm',
-		title: 'Google PaLM'
+	  value: 'gemini',
+        title: 'Gemini'
 	}
 ]
 export const GENDERS = [
