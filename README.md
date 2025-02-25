@@ -13,7 +13,7 @@ A project to generate your weekly workout plan with either OpenAI GPT model or G
 1. Clone the repo
 2. Run `npm install` to install all the dependencies
 3. Create a `.env.local` from `env-example` file: `cp env-example .env.local`
-4. Update the OpenAI key and Google PaLM API key in the `.env.local` file
+4. Update the Gemini API key in the `.env.local` file
 5. Run `npm run dev` to start the project
 
 
