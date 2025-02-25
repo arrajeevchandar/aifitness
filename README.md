@@ -8,8 +8,7 @@ A project to generate your weekly workout plan with either OpenAI GPT model or G
 
 ## Pre-requisites to run this project
 
-1. OpenAI API Key
-2. Google PaLM API Key
+1. Gemini API key
 
 ## Steps to run this project
 
@@ -24,6 +23,5 @@ A project to generate your weekly workout plan with either OpenAI GPT model or G
 
 - NextJS
 - TailwindCSS
-- OpenAI GPT Model
-- Google PaLM Model
+- Gemini ai model
 
