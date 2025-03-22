@@ -1,7 +1,13 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button"; // Adjust path if needed
+'use client';
+
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useSession, signIn } from 'next-auth/react';
+import ProfileDropdown from './ProfileDropdown'; // Import the dropdown
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
   return (
     <div className="p-4 border-b fixed w-full z-50 bg-black">
       <div className="flex max-w-5xl mx-auto items-center">
@@ -12,9 +18,7 @@ export default function Navbar() {
 
         {/* Spacer to push button to the right */}
         <div className="ml-auto">
-          <Button asChild>
-            <Link href="/login">Login</Link>
-          </Button>
+          {session ? <ProfileDropdown /> : <Button onClick={() => signIn()}>Login</Button>}
         </div>
       </div>
     </div>
