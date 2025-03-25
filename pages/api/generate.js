@@ -15,7 +15,7 @@ const generatePrompt = (userData) => {
         generate more rigorous exercises when time limit is 12 months and even more rigorous if timelimit is 18 months to improve their bmi
         the plan should have normal exercises if the diseases is none , if they have heart diseases or bone deficiency generate the exercises accordingly and create a plan
         Sample output JSON:
-        [{"day": "Monday","exercises": [{"exercise": "...", "sets": "...", "reps": "...", "weight": "...","rest": "...","calories":"..."}]},"bmi":"..."]
+        [{"day": "Monday","exercises": [{"exercise": "...", "sets": "...", "reps": "...", "weight": "...","rest": "...","calories":"..."}]}]
         
         "reps" in JSON is a string with number of reps 
         "rest" in JSON is the rest to be taken between sets
@@ -62,9 +62,9 @@ export default async function handler(req, res) {
                 diseases,
                 timelimit
             } = req.body;
-            const bmi=height/((weight/100)*(weight/100));
+            const bmi=weight/((height/100)*(height/100));
             // Generate the prompt
-            const prompt = generatePrompt({ height, weight, age, gender, fitnessLevel, goal, diseases,timelimit,bmi });
+            const prompt = generatePrompt({ height, weight, age, gender, fitnessLevel, goal, diseases,timelimit, bmi });
 
             // Check which model to use
             if (model.toLowerCase() === 'gemini') {
