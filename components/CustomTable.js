@@ -20,16 +20,18 @@ const CustomTableHeader = ({ colName }) => (
 			<CustomTableHeader colName={"Reps"} />
 			<CustomTableHeader colName={"Weights"} />
 			<CustomTableHeader colName={"Rest Between Sets"} />
+			<CustomTableHeader colName={"Calories Burnt"} />
 		  </tr>
 		</thead>
 		<tbody>
-		  {exercises.map(({ exercise, sets, reps, weight, rest }, index) => (
+		  {exercises.map(({ exercise, sets, reps, weight, rest,calories }, index) => (
 			<tr key={index} className="group transition-all duration-200 hover:scale-[1.02]">
 			  <CustomTableData data={exercise} />
 			  <CustomTableData data={sets} />
 			  <CustomTableData data={reps} />
 			  <CustomTableData data={weight} />
 			  <CustomTableData data={rest} />
+			  <CustomTableData data={calories} />
 			</tr>
 		  ))}
 		</tbody>

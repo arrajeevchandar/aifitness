@@ -1,7 +1,7 @@
 import { BiSolidSend } from "react-icons/bi";
 import InputText from "@/components/form/InputText";
 import CustomSelect from "@/components/form/CustomSelect";
-import { AI_SOURCES, FITNESS_LEVELS, GENDERS, GOALS } from "@/constants";
+import { AI_SOURCES, DISEASES, FITNESS_LEVELS, GENDERS, GOALS, TIMELIMIT } from "@/constants";
 import toast from "react-hot-toast";
 
 const GENERATE_URL = "/api/generate";
@@ -19,6 +19,8 @@ export default function UserForm({ setData, setLoading, loading }) {
       gender: event.target.elements.gender.value,
       fitnessLevel: event.target.elements.fitnessLevel.value,
       goal: event.target.elements.goal.value,
+      diseases:event.target.elements.diseases.value,
+      timelimit:event.target.elements.timelimit.value,
     };
 
     let response = await fetch(GENERATE_URL, {
@@ -79,6 +81,12 @@ export default function UserForm({ setData, setLoading, loading }) {
         </div>
         <div className="w-full md:w-1/3 px-3">
           <CustomSelect id="goal" label="Goal" values={GOALS} />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="diseases" label="Diseases" values={DISEASES} />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="timelimit" label="Time Limit" values={TIMELIMIT} />
         </div>
       </div>
 
