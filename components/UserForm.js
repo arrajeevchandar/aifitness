@@ -1,115 +1,101 @@
-import {BiSolidSend} from "react-icons/bi";
+import { BiSolidSend } from "react-icons/bi";
 import InputText from "@/components/form/InputText";
 import CustomSelect from "@/components/form/CustomSelect";
-import {AI_SOURCES, FITNESS_LEVELS, GENDERS, GOALS} from "@/constants";
+import { AI_SOURCES, FITNESS_LEVELS, GENDERS, GOALS } from "@/constants";
 import toast from "react-hot-toast";
 
-const GENERATE_URL = "/api/generate"
+const GENERATE_URL = "/api/generate";
 
-export default function UserForm({setData, setLoading, loading}) {
+export default function UserForm({ setData, setLoading, loading }) {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
 
-	const handleSubmit = async (event) => {
-		event.preventDefault(); // Prevent form submission and page reload
-		setLoading(true)
+    const formData = {
+      model: event.target.elements.model.value,
+      height: event.target.elements.height.value,
+      weight: event.target.elements.weight.value,
+      age: event.target.elements.age.value,
+      gender: event.target.elements.gender.value,
+      fitnessLevel: event.target.elements.fitnessLevel.value,
+      goal: event.target.elements.goal.value,
+    };
 
-		// Retrieve the form field values
-		const model = event.target.elements.model.value;
-		const height = event.target.elements.height.value;
-		const weight = event.target.elements.weight.value;
-		const age = event.target.elements.age.value;
-		const gender = event.target.elements.gender.value;
-		const fitnessLevel = event.target.elements.fitnessLevel.value;
-		const goal = event.target.elements.goal.value;
+    let response = await fetch(GENERATE_URL, {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
 
-		// Create an object with the form values
-		const formData = {
-			height,
-			weight,
-			age,
-			gender,
-			fitnessLevel,
-			goal,
-			model,
-		};
+    if (response.ok) {
+      response = await response.json();
+      setLoading(false);
+      setData(response.result);
+      toast.success("Workout generated!");
+    } else {
+      response = await response.json();
+      setLoading(false);
+      toast.error(response.error.message);
+    }
+  };
 
-		let response = await fetch(GENERATE_URL, {
-			method: 'POST',
-			body: JSON.stringify(formData),
-			headers: {
-				"Content-type": "application/json"
-			}
-		})
+  return (
+    <form
+      className="w-full my-10 mt-6 p-6 bg-gradient-to-br from-[#F0F4F8] to-[#E2E8F0] border border-[#CBD5E1] shadow-xl rounded-lg"
+      onSubmit={handleSubmit}
+      autoComplete="off"
+    >
+      {/* AI Model Selection */}
+      <div className="flex flex-wrap -mx-3 mb-4">
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="model" label="AI Source" values={AI_SOURCES} />
+        </div>
+      </div>
 
-		if (response.ok) {
-			response = await response.json()
-			setLoading(false)
-			setData(response.result)
-			toast.success("Workout generated!")
-		} else {
-			response = await response.json()
-			console.error('error')
-			setLoading(false)
-			toast.error(response.error.message)
-		}
-	};
+      <hr className="border-[#94A3B8] my-5" />
 
-	return (
-		<form className="w-full my-10 mt-6 p-4 border border-gray-100 rounded-xl shadow-md" onSubmit={handleSubmit} autoComplete={"off"}>
-			<div className="flex flex-wrap -mx-3 mb-2">
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<CustomSelect
-						id={'model'}
-						label={'AI Source'}
-						values={AI_SOURCES}
-					/>
-				</div>
-			</div>
-			<hr className={"my-5"}/>
-			<div className="flex flex-wrap -mx-3 mb-3">
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<InputText label={"Height (cm)"} id={"height"}/>
-				</div>
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<InputText label={"Weight (kg)"} id={"weight"}/>
-				</div>
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<InputText label={"Age (yr)"} id={"age"}/>
-				</div>
-			</div>
-			<div className="flex flex-wrap -mx-3 mb-2">
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<CustomSelect
-						id={'gender'}
-						label={'Gender'}
-						values={GENDERS}
-					/>
-				</div>
+      {/* Physical Attributes */}
+      <div className="flex flex-wrap -mx-3 mb-4">
+        <div className="w-full md:w-1/3 px-3">
+          <InputText label="Height (cm)" id="height" />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <InputText label="Weight (kg)" id="weight" />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <InputText label="Age (yr)" id="age" />
+        </div>
+      </div>
 
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<CustomSelect
-						id={'fitnessLevel'}
-						label={'Fitness Level'}
-						values={FITNESS_LEVELS}
-					/>
-				</div>
+      {/* Dropdowns */}
+      <div className="flex flex-wrap -mx-3 mb-4">
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="gender" label="Gender" values={GENDERS} />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="fitnessLevel" label="Fitness Level" values={FITNESS_LEVELS} />
+        </div>
+        <div className="w-full md:w-1/3 px-3">
+          <CustomSelect id="goal" label="Goal" values={GOALS} />
+        </div>
+      </div>
 
-				<div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-					<CustomSelect
-						id={'goal'}
-						label={'Goal'}
-						values={GOALS}
-					/>
-				</div>
-			</div>
-			<div className="mt-6 flex items-center justify-end gap-x-6">
-				<button
-					type="submit"
-					disabled={loading}
-					className="rounded-md bg-primary-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark disabled:bg-primary-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-					{loading ? 'Please wait...' :
-						<div className={'flex justify-center items-center gap-2'}>Submit <BiSolidSend/></div>}
-				</button>
-			</div>
-		</form>
-	)
+      {/* Submit Button */}
+      <div className="mt-6 flex justify-end">
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex items-center gap-2 bg-gradient-to-r from-[#4C9AFF] to-[#0052CC] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg hover:from-[#0052CC] hover:to-[#003E99] disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Please wait..." : (
+            <>
+              Submit <BiSolidSend className="text-lg" />
+            </>
+          )}
+        </button>
+      </div>
+    </form>
+  );
 }

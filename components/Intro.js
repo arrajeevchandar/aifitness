@@ -1,13 +1,21 @@
 export default function Intro() {
 	return (
-		<div className={'text-md text-zinc-600 mt-3'}>
-			<p className={"font-semibold text-2xl"}>
-				Welcome to our fitness app!
-			</p>
-			<p className={"mt-2"}>
-				Get personalized exercise plans tailored to your needs. Beginner or experienced, we guide you towards a
-				healthier, fitter you. <span className={"mt-2 font-bold"}>Start your fitness journey today!</span>
-			</p>
-		</div>
-	)
-}
+	  <div className="max-w-3xl mx-auto text-center mt-8 px-6">
+		{/* Stunning Gradient Heading */}
+		<h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
+		  Welcome to AI Fitness Planner
+		</h1>
+  
+		{/* Elegant Subtitle */}
+		<p className="mt-4 text-lg sm:text-xl text-gray-300 font-medium tracking-wide">
+		  Your personalized fitness companion. Whether you're a beginner or a pro, we provide expert guidance to help you achieve your goals.  
+		</p>
+  
+		{/* Premium Call to Action */}
+		<p className="mt-6 text-lg sm:text-xl font-semibold text-white uppercase tracking-wider bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-lg shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+		  Start Your Fitness Journey Today!
+		</p>
+	  </div>
+	);
+  }
+  
