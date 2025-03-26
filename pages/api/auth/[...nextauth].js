@@ -1,39 +1,76 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import authOptions from "@/lib/authOptions";
-export default NextAuth({
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaClient } from "@prisma/client";
+import { compare } from "bcryptjs";
+
+const prisma = new PrismaClient();
+
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        url: "https://accounts.google.com/o/oauth2/v2/auth",
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email", placeholder: "email@example.com" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Replace this with your own user authentication logic
-        if (credentials.email === 'test@example.com' && credentials.password === 'password') {
-          return { id: '1', name: 'Test User', email: 'test@example.com' };
+        if (!credentials.email || !credentials.password) {
+          throw new Error("Email and Password are required");
         }
-        return null;
+
+        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+
+        if (!user) throw new Error("No user found");
+
+        const isValidPassword = await compare(credentials.password, user.password);
+        if (!isValidPassword) throw new Error("Incorrect password");
+
+        return { id: user.id, name: user.name, email: user.email };
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/auth/login",
+  },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account.provider === "credentials") return true;
+      if (account.provider === "google") {
+        const existingUser = await prisma.user.findUnique({ where: { email: user.email } });
+        if (!existingUser) {
+          await prisma.user.create({
+            data: { name: user.name, email: user.email, password: null },
+          });
+        }
+        return true;
+      }
+      return false;
+    },
+    async jwt({ token, user }) {
+      if (user) token.role = user.role;
+      return token;
+    },
     async session({ session, token }) {
-      session.user.id = token.sub;
+      session.user.role = token.role;
       return session;
     },
+    debug: true, // Enable debug mode for more logs
+  timeout: 10000,
   },
-  pages: {
-    signIn: '/auth/SignIn', // Custom sign-in page
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-});
+};
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default (req, res) => NextAuth(req, res, authOptions);
