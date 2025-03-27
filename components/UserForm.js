@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react"; // If using NextAuth
 import { BiSolidSend } from "react-icons/bi";
 import InputText from "@/components/form/InputText";
 import CustomSelect from "@/components/form/CustomSelect";
@@ -7,20 +9,29 @@ import toast from "react-hot-toast";
 const GENERATE_URL = "/api/generate";
 
 export default function UserForm({ setData, setLoading, loading }) {
+  const router = useRouter();
+  const { data: session } = useSession(); // Check if user is logged in
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!session) {
+      toast.error("You must be logged in to submit!");
+      router.push("/auth/signup");
+      return;
+    }
+
     setLoading(true);
 
     const formData = {
-      model: event.target.elements.model.value,
+      model: 'gemini',
       height: event.target.elements.height.value,
       weight: event.target.elements.weight.value,
       age: event.target.elements.age.value,
       gender: event.target.elements.gender.value,
       fitnessLevel: event.target.elements.fitnessLevel.value,
       goal: event.target.elements.goal.value,
-      diseases:event.target.elements.diseases.value,
-      timelimit:event.target.elements.timelimit.value,
+      diseases: event.target.elements.diseases.value,
+      timelimit: event.target.elements.timelimit.value,
     };
 
     let response = await fetch(GENERATE_URL, {
@@ -49,14 +60,8 @@ export default function UserForm({ setData, setLoading, loading }) {
       onSubmit={handleSubmit}
       autoComplete="off"
     >
-      {/* AI Model Selection */}
-      <div className="flex flex-wrap -mx-3 mb-4">
-        <div className="w-full md:w-1/3 px-3">
-          <CustomSelect id="model" label="AI Source" values={AI_SOURCES} />
-        </div>
-      </div>
 
-      <hr className="border-[#94A3B8] my-5" />
+      
 
       {/* Physical Attributes */}
       <div className="flex flex-wrap -mx-3 mb-4">
@@ -86,7 +91,7 @@ export default function UserForm({ setData, setLoading, loading }) {
           <CustomSelect id="diseases" label="Diseases" values={DISEASES} />
         </div>
         <div className="w-full md:w-1/3 px-3">
-          <CustomSelect id="timelimit" label="Time Limit" values={TIMELIMIT} />
+          <CustomSelect id="timelimit" label="Period" values={TIMELIMIT} />
         </div>
       </div>
 

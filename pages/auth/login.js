@@ -32,13 +32,7 @@ export default function Login() {
       <Card className="w-[400px]">
         <CardHeader className="text-center text-2xl font-bold">Login</CardHeader>
         <CardContent>
-          <Button
-            onClick={() => signIn('google', { callbackUrl: "/" })}
-            className="w-full bg-red-500 text-white mb-4"
-          >
-            Sign in with Google
-          </Button>
-
+          
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               type="email"
@@ -56,6 +50,14 @@ export default function Login() {
               Login
             </Button>
           </form>
+          <br/>
+          <Button
+            onClick={() => signIn('google', { callbackUrl: "/" })}
+            className="w-full bg-red-500 text-white mb-4"
+          >
+            Sign in with Google
+          </Button>
+
         </CardContent>
       </Card>
     </div>

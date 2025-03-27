@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import WeeklyPlan from "@/components/WeeklyPlan";
 import {BiSolidDownload} from "react-icons/bi"
-
+import { useSession, signIn, signOut } from "next-auth/react";
 const TableToPDF = ({data}) => {
 	const pdfContainerRef = useRef(null);
 	const handleDownload = async () => {
@@ -15,7 +15,8 @@ const TableToPDF = ({data}) => {
 			.from(pdfContainerRef.current)
 			.save('table.pdf');
 	};
-
+const { data: session } = useSession();
+  const userName = session?.user?.name || "";
 	return (
 		<div className={'p-4 border border-gray-100 rounded-xl shadow-md'}>
 			{
@@ -33,13 +34,16 @@ const TableToPDF = ({data}) => {
 							</button>
 						</div>
 						<div className="mt-6 flex items-center justify-end gap-x-6">
-							<div ref={pdfContainerRef}>
-								<h1 className={'text-3xl text-center mb-5 '}>
-									Your Weekly Exercise
-								</h1>
-								<WeeklyPlan data={data}/>
-							</div>
-						</div>
+      <div ref={pdfContainerRef}>
+        {session?.user && (
+          <h2 className="text-3xl text-center mb-5">
+            Welcome, {userName}!
+          </h2>
+        )}
+        <h1 className="text-3xl text-center mb-5">Your Weekly Exercise</h1>
+        <WeeklyPlan data={data} />
+      </div>
+    </div>
 					</>
 					: undefined
 			}
